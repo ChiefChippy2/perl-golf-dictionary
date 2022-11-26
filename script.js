@@ -25,7 +25,6 @@ async function code_arr_text(code_arr) {
 <table id = "filter-${i}" class = "filter-aaa" border="5">
 <tr>
   <td style="width:60vh" class="code-x" id = "code-${ind}">${code}</td>
-  <textarea class="code" id = "code-${ind}">${code}</textarea>
   <td style="width:35vh">${description}</td>
   <td style="width:5vh">
     <button onclick="[...document.getElementsByClassName('${i}')].map(d=>d.classList.toggle('show'));">Examples</button>
@@ -55,7 +54,6 @@ async function code_arr_text(code_arr) {
           [c] = e;
         }
         let n = `<tr class="tr-example">
-  <textarea class="code" id = "code-${ind}">${c}</textarea>
   ${stdin}
   <td class="snippet code-x" id = "code-${ind}">${c}</td>
   ${stdout}
@@ -73,42 +71,10 @@ async function code_arr_text(code_arr) {
 }
 
 async function code_mirror_rep() {
-  // console.log([...document.getElementsByClassName("code")]);
-  [...document.getElementsByClassName("code")].sort((a, b) => a.id.split("-")[1] - b.id.split("-")[1]).map(elem => {
-    // console.log("eleme there", elem);
-    let editor = CodeMirror.fromTextArea(elem, {}, elem.id);
-    // console.log(editor.chicken);
-  })
+   [...document.getElementsByClassName("code-x")].sort((a, b) => a.id.split("-")[1] - b.id.split("-")[1]).map(elem => { 
+     CodeMirror.runMode(elem.innerText, "text/x-perl", elem)
+   });
 }
-
-async function onlyUnique(value, index, self) {
-  return self.indexOf(value) === index;
-}
-
-async function syntax_rep() {
-  SYNTAX_LOOP = setInterval(function() {
-    if (!document.getElementsByClassName("code")) {
-      return;
-    }
-
-
-    let code_x_elem_arr = [...document.getElementsByClassName("code-x")];
-    let code_ind = 0;
-    console.log("builder big is what", BUILDER_BIG);
-    // let span_string = BUILDER_BIG.map((builder_line) => {
-    Object.keys(BUILDER_BIG).forEach(function (builder_id) { 
-      let code_elem_arr = [...BUILDER_BIG[builder_id].children];
-      let code_text = code_elem_arr.map(ce => [...ce.childNodes][0].innerHTML).join("\n");
-      code_x_elem_arr.find(cx => cx.id == builder_id).innerHTML = code_text;
-    })
-    let a = [...document.getElementsByClassName("CodeMirror")]
-    a.map(x => x.remove());
-
-    clearInterval(SYNTAX_LOOP);
-    BUILDER_BIG = {};
-  }, 10);
-}
-
 
 async function file_parse() {
   const QUERY_ARR = QUERY.split("\n***\n");
@@ -130,10 +96,7 @@ async function file_parse() {
       if (typeof stdout !== "undefined") {
         arr.push(stdout);
       }
-      //   return [code, stdout];
-      // } else {
-      //   return [stdin, code, stdout];
-      // }
+
       return arr;
     });
     return example_arr.length == 0 ? [ind, code, desc] : [ind, code, desc, example_arr];
@@ -160,7 +123,6 @@ async function main(code_arr) {
   // console.log(a);
   await $("#TABLE").html(a);
   await code_mirror_rep();
-  await syntax_rep();
 }
 
 $(document).ready(() => {

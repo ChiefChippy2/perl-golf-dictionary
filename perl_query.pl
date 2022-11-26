@@ -1,3 +1,314 @@
+$S =~ / \S+/
+---
+split $S into 3 numbers $` $& $'
+iii
+1 2 3
+4 5 6
+ccc
+/ \S+/, print $` * $& + $', $/ for <>
+ooo
+5
+26
+***
+"\u\L$S\E"
+---
+upper case first char of $S, lowercase rest
+iii
+ccc
+$s = "cHickeN";
+print "\u\L$S" # can omit \E if nothing else
+ooo
+Chicken
+***
+"\U$S\E"
+---
+lowercase string $S
+iii
+ccc
+$S = "wow";
+print "\U$S" # can omit \E if nothing else
+ooo
+WOW
+***
+"\L$S\E"
+---
+lowercase string $S
+iii
+ccc
+$S = "WOW";
+print "\L$S" # can omit \E if nothing else
+ooo
+wow
+***
+"\l$S"
+---
+lowercase first character of $S
+***
+"\u$S"
+---
+uppercase first character of $S
+***
+lc $S
+---
+lowercase string $S
+***
+uc $S
+---
+uppercase string $S
+***
+/\PL/
+---
+match non alphabetic character
+***
+/\pL/
+---
+match alphabetic character
+***
+sprintf "%0$^d", $S
+---
+format $S with variable $^ length padding
+iii
+ccc
+$a = 3;
+printf "%0${a}d", 50
+ooo
+050
+iii
+ccc
+$^ = 3;
+printf "%0$^d", 50
+ooo
+3
+---
+%!
+---
+hash map with a lot of items
+iii
+1
+2
+5
+ccc
+$s += <> for %!;
+print $s
+ooo
+8
+***
+$s =~ / /
+---
+store prematch into $` and postmatch into $'
+iii
+1 632
+2 5
+ccc
+/ /, print $` * ($' + 1), $/ for <>
+ooo
+633
+12
+***
+split $", `dd`
+---
+split all input on $"
+***
+glob `dd`
+---
+glob all input
+***
+split $/, `dd`
+---
+split all input on $/
+iii
+a
+b
+c
+ccc
+print join "+", split $/, `dd`
+ooo
+a+b+c
+***
+chomp(@A = <>)
+---
+split <> on $/ into @A and remove delimiter from the end of each string
+iii
+1
+2
+3
+ccc
+chomp(@A = <>);
+print join "+", @A
+ooo
+1+2+3
+***
+$s =~ /.*/
+---
+store $s without newline into $&
+iii
+a
+b
+c
+ccc
+/.*/, print $& for <>
+ooo
+abc
+iii
+54 fish
+32 chicken
+ccc
+/ (.*)/, $H{$1} = $` for <>;
+print join $/, sort {$H{$a} - $H{$b}} keys %H
+ooo
+chicken
+fish
+***
+\%H{@A}
+---
+store unique keys into %H
+iii
+ccc
+@A = (1, 1, 4, 5);
+\%H{@A};
+print ~~%H
+ooo
+3
+***
+`tr`
+---
+transliterate / translate all input
+***
+`tac`
+---
+reverse all lines in input
+***
+`rev`
+---
+reverse all input
+***
+`sort`
+---
+bash sort all lines in input
+***
+`factor`
+---
+prime factorization each input line
+***
+(sort {$a-$b} @A)[0]
+---
+min of list @A
+***
+\@B[@A]
+---
+store max value of list @A into $#B (no negative) (do not modify $#B or @B after)
+iii
+ccc
+@A = (1, 2, 32342);
+\@B[@A];
+print $#B
+ooo
+32342
+***
+[]
+---
+list reference (nested list)
+iii
+ccc
+$A = [1];
+print join $/, @$A
+ooo
+1
+iii
+ccc
+$A = [[1, 4], 3];
+print join $/, @{@$A[0]}
+ooo
+1
+4
+iii
+5
+4
+ccc
+$H{$_} = [$_ + 1, $_ - 1] for <>;
+print join $/, @{$H{5}}
+ooo
+6
+4
+***
+@{$A}
+---
+convert a list reference $A to a list
+iii
+ccc
+$A = [1];
+print join $/, @$A # can omit {} if just var
+ooo
+1
+iii
+ccc
+$A = [[1, 4], 3];
+print join $/, @{@$A[0]}
+ooo
+1
+4
+iii
+5
+4
+ccc
+$H{$_} = [$_ + 1, $_ - 1] for <>;
+print join $/, @{$H{5}}
+ooo
+6
+4
+***
+$$A
+---
+double variable $$A
+iii
+ccc
+$A = "chicken";
+$$A = 3;
+print $chicken
+ooo
+3
+iii
+ccc
+$A = "chick";
+${$A . "en"} = 3;
+print $chicken
+ooo
+3
+iii
+a
+b
+d
+ccc
+++$$_ for split $/, `dd`;
+print $$_ + 0, $/ for a..d
+ooo
+1
+1
+0
+1
+***
+"@+" + 0
+---
+get the index + length of the match
+iii
+ccc
+$_ = "wow";
+/ow/;
+print "@+" + 0
+ooo
+3
+***
+"@-" + 0
+---
+get the index of the match
+iii
+ccc
+$_ = "wow";
+/ow/;
+print "@-" + 0
+ooo
+1
+***
 until
 ---
 while loop until condition is false
@@ -194,6 +505,50 @@ ooo
 3
 5
 7
+***
+#!perl -00
+---
+paragraph mode (sets $/ to '' and reads input delimited by '\n\n')
+iii
+a
+chicken
+
+b
+ccc
+#!perl -00
+use Data::Dumper;
+print Dumper <>;
+print Dumper <>;
+ooo
+$VAR1 = '5
+4weraer
+
+';
+$VAR2 = 'rwerawer
+awe';
+***
+#!perl -0
+---
+0 flag (sets $/ to '' or chr of octal number)
+iii
+a
+b
+c
+ccc
+#!perl -0
+print '[', <>, ']'
+ooo
+[a
+b
+c]
+iii
+32978349234 5 3
+ccc
+#!perl -p040
+# -p flag and 040 => " "
+$_ = <> * <>
+ooo
+15
 ***
 #!perl -p
 ---
@@ -605,9 +960,9 @@ print $#F
 ooo
 3
 ***
-<@A>
+<@A> . ""
 ---
-first item of list @A (need to cast to scalar)
+first item of list @A
 iii
 ccc
 @A = qw(a b c);
@@ -655,7 +1010,7 @@ string concatenate $A and $B
 ***
 eval "\$A =~ y/$a/$b/"
 ---
-transliterate $A with variable input chars $a and output $b
+transliterate / translate $A with variable input chars $a and output $b
 iii
 w
 d
