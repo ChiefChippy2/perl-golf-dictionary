@@ -45,6 +45,24 @@ input {
    border-bottom: none;
 }
 
+.code {
+  width: 50vh;
+  overflow-x: auto;
+  white-space: nowrap;
+}
+.description {
+  width: 35vh;
+}
+.example {
+  width: 15vh;
+}
+.example:hover {
+  background-color: aqua;
+  cursor: pointer;
+}
+.hidden {
+  display: none;
+}
 
 .snippet {
 	margin-top: 0.5em;

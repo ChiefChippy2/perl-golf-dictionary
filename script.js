@@ -24,19 +24,17 @@ async function code_arr_text(code_arr) {
     let z = `
 <table id = "filter-${i}" class = "filter-aaa" border="5">
 <tr>
-  <td style="width:60vh" class="code-x" id = "code-${ind}">${code}</td>
-  <td style="width:35vh">${description}</td>
-  <td style="width:5vh">
+  <td class="code code-x" id = "code-${ind}">${code}</td>
+  <td class="description">${description}</td>
+  <td class="example ${Array.isArray(example_arr) ? 'hidden': ''}">
     <button onclick="[...document.getElementsByClassName('${i}')].map(d=>d.classList.toggle('show'));">Examples</button>
   </td>
 </tr>
 </table>
-`;
+`; // Because this is scuffed I'll just scuff this more
     ind += 1;
     let example_dropdown = ""
-    if (typeof example_arr === "undefined") {
-      z = z.replace(`<button onclick="[...document.getElementsByClassName('${i}')].map(d=>d.classList.toggle('show'));">Examples</button>`, "")
-    } else {
+    if (Array.isArray(example_arr)) {
       example_dropdown = example_arr.map(e => {
         let stdin = "";
         let c = "";
