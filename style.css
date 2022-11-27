@@ -52,6 +52,7 @@ input {
 }
 .description {
   min-width: 35vh;
+  width: 35vh
 }
 .example {
   width: 15vh;
