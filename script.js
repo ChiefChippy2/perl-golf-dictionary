@@ -26,7 +26,7 @@ async function code_arr_text(code_arr) {
 <tr>
   <td class="code code-x" id = "code-${ind}">${code}</td>
   <td class="description">${description}</td>
-  <td class="example ${Array.isArray(example_arr) ? 'hidden': ''}">
+  <td class="example ${Array.isArray(example_arr) ? '': 'hidden'}">
     <button onclick="[...document.getElementsByClassName('${i}')].map(d=>d.classList.toggle('show'));">Examples</button>
   </td>
 </tr>
