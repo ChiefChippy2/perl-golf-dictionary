@@ -56,7 +56,7 @@ input {
 .example {
   width: 15vh;
 }
-.example:hover {
+.example > button :hover {
   background-color: aqua;
   cursor: pointer;
 }
